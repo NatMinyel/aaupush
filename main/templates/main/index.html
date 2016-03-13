@@ -1,52 +1,19 @@
 <html>
 <head>
 <title>
-AAU Push
+    AAU Push
 </title>
 </head>
 <body bgcolor='#f9f8f0'>
-<center><h1>AAU Push</h1></center>
-<center><h2>{{name}} (Code: {{code}})</h2></center>
+    <center><h1>AAU Push</h1></center>
+    <center><h2>click on your section below</h2></center>
 <hr>
-    <table border=0 cellpadding=20 width="100%">
-        <tr>
-            <td valign='top' width='50%'>
-                <center><h2>Announcements</h2></center>
-                <ul>
-                    {% for ann in announcements %}
-                        <li><b>{{ann.by}}: </b></br> 
-                        {% if ann.is_urgent %}    
-                            <b><font color='#CC0000'>{{ann.message}}</font></b>
-                        {% else %}
-                            {{ann.message}}
-                        {% endif %} </br>
-		        ({{ann.pub_date}})
-                        </li></br>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td valign='top' width='50%'>
-                <center><h2>Materials</h2></center>
-                <b>This Week:</b> </br>
-                <ul>
-                    {% for mat in this_week %}
-                    <li><b>{{mat.by.name}}</b> </br>
-                        <a href="{% url 'file' mat.id%}">[File] {{mat.name}}</a>:
-                        {{mat.description}}</br>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <hr>
-                </br>
-                <b>Material Folders:</b></br>
-                <ul>
-                    {% for fol in folders %}
-                        <li> <a href="{% url 'folder' code fol.get_link_name %}">{{fol.name}}</a> (Last Update: {{fol.last_update}})</li></br>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-    </table>
-
+    <center>
+        <ul style="list-style-type: none;">
+            {% for section in sections %}
+                <li><a href="{% url 'section' section.code %}">{{section.name}}</a></li>
+            {% endfor %}
+        </ul>
+    </center>
 </body>
 </html>

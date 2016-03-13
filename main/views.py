@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from models import Announcement, Lecturer, Section, Folder, Material
 from django.http import HttpResponse, HttpResponseNotFound
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 import datetime 
+
+def index_view(request):
+    sections = Section.objects.all()
+    return render(request, 'main/index.html', {'sections':sections})
 
 def section_view(request, section_code):
     section_object = get_object_or_404(Section, code=section_code)
@@ -19,7 +23,7 @@ def section_view(request, section_code):
     this_week.reverse()
     context = {'name':section_name, 'code':section_code, 'announcements':section_announcements, 'folders':section_folders, 'this_week':this_week}
 
-    return render(request, 'main/index.html', context)
+    return render(request, 'main/section.html', context)
 
 def folder_view(request, section_code, folder_link_name):
     folder_name = folder_link_name.replace('-', ' ')
@@ -60,6 +64,10 @@ def login_view(request):
         message = 'Invalid Username/Password.'
         return render(request, 'main/login.html', {'message':message})
 
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
 def portal_view(request):
     if request.user.is_authenticated():
         user = request.user
@@ -95,5 +103,5 @@ def backend_view(request):
         pub_date = datetime.datetime.now()
         for folder in folders:
             Material.objects.create(by=by, name=name, description=description, pub_date=pub_date, folder=folder, file=file)
-        return redirect('portal') 
+        return redirect('portal')
 
