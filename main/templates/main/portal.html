@@ -1,72 +1,122 @@
-<html>
-<head>
-<title>AAU Push: Portal</title>
-</head>
-<body bgcolor='#f9f8f0'>
+{% extends "main/base.html" %}
 
-<h2> AAU Push </h2>
-Welcome, <b>{{lecturer.user.first_name}} {{lecturer.user.last_name}}</b>. Here you can post announcements and upload course materials. Don't forget to <a href="{% url 'logout' %}">logout</a>.
-<hr>
 
-<b>Post an announcement:</b> </br>
-<form action="{%url 'backend'%}" method='post'>
-<input type='hidden' name='request_type' value='announcement' />
-{% csrf_token %}
-<table border=0>
-    <tr>
-        <td>
-            <label for='message'>Message:</label>
-        </td>
-        <td>
-            <textarea rows='3' cols='50' name='message' placeholder='Type your announcement here.'></textarea>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Select sections:
-        </td>
-        <td>
-            {% for section in sections %}
-                <input type='checkbox' name='section' value='{{section.code}}' >{{section.code}}</input>
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <td colspan=2>
-            <input type='checkbox' name='urgent' value='true'>This announcement is urgent.</input>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=2>
-            This announcement expires in <input type='number' name='duration'/> days from now.
-        </td>
-    </tr>
-    <tr align='right'>
-        <td colspan=2>
-        <input type='submit' value='Post Announcement'/>
-        </td>
-    </tr>
+{% block title %}
+	AAU Push | Portal
+{% endblock %}
+
+
+{% block script %}
+	function myFunction(name){
+  		var $checkbox = document.getElementsByName(name), $checked=0;
+  		
+  		for(var i=0; i < $checkbox.length; i++){
+	    		if($checkbox[i].checked){
+				$checked++; }
+	  		}
+		
+		if($checked > 0){
+			for (var i = 0; i < $checkbox.length; i++){ 
+		    		$checkbox[i].required = false; }
+		 }	
+		 
+		 else{
+			 for (var i = 0; i < $checkbox.length; i++){
+			 	$checkbox[i].required = true;}
+			 }
+		}
+		
+	function myotherFunction(enable,disable){
+ 		var $enable = document.getElementsByName(enable),
+	 	$disable = document.getElementsByName(disable);
+	
+		for(var i=0; i < $enable.length; i++){
+		 	$enable[i].disabled = false;
+		 	$enable[i].required = true;
+		 }
+		for(var i=0; i < $disable.length; i++){
+		 	$disable[i].disabled = true;
+		 	$disable[i].checked = false;
+		 }
+	}	
+{% endblock %}
+
+
+{% block extra %}
+	| Welcome, {{lecturer.user.first_name}}
+{% endblock %}
+
+
+{% block section_code %}
+Here you can post an announcement or upload course material.
+<form action="{% url 'portal' %}" method='post' style="display:inline;">
+	{% csrf_token %}
+	<input type="hidden" name="request_type" value='Logout'/>
+	<input type="submit" name='logout' value='Logout'/>
+</form>
+{% endblock %}
+
+
+{% block content %}
+<br>
+<table border="1px" width=100% cellpadding="10px">
+	<tr>
+		<th>Post Announcement</th>
+		<th>Upload Material</th>
+	</tr>
+	<tr>
+		<td width=50% valign="top">
+         <table  width="100%">
+		  <form enctype='multipart/form-data' action="{% url 'backend_view' %}" method='post'>
+		  <input type='hidden' name='request_type' value='announcement' />
+		  {% csrf_token %}
+		   <tr><td> Enter announcement:<br> </td></tr>
+					<tr><td> <textarea id="message" name="message" rows="5" cols="50" required></textarea> </td></tr>
+		   <tr><td> <input type="file" name="file" /> <br> </td></tr>
+		   <tr><td> <input type="file" name="file_" /> <br><br> </td></tr>
+		   <tr><td> <input name="urgent" type="checkbox" value="True"/> Is this announcement urgent? </td></tr>
+		   <tr><td style="float:left;"> This announcement should expire in<input name="duration" type="number" required/>days from now </td></tr>
+		   <tr><td> <input type="radio" name="ann_type" value="course" required onclick="myotherFunction('course','section')"/>
+				To all students taking the following course/courses:<br> </td></tr>
+		   <tr><td> {% for cor in course %} 
+					<input type="checkbox" name='course' value="{{cor.name}}" onchange="myFunction('course')" required="required" disabled="True"  >{{cor}}</input>
+				{% endfor %}<br> </td></tr>
+		   <tr><td> <input type="radio" name="ann_type" value="section" required onclick="myotherFunction('section','course')"/>To all students in the following section/sections:<br> </td></tr>
+		   <tr><td> {% for section in sections%}
+		   <input name="section" type="checkbox" value="{{section}}"  onchange="myFunction('section')" required="required" disabled="True"/>{{section}}
+				{%endfor%} </td></tr>
+           <tr><td> <input type='submit' value='Post Announcement'/> </td></tr>
+			</form>
+          </table>  
+		</td>
+		
+		<td width=50% valign="top">
+         <table width="100%">
+		   <form enctype='multipart/form-data' action="{% url 'backend_view'%}" method="post">
+		   {% csrf_token %}
+		   <input type='hidden' name='request_type' value='material' />
+			<tr><td> Enter Name of File: <input type='text' name='name' required/> <br><br> </td></tr>
+			<tr><td> Choose File: <input type='file' name='file_data' required/> <br><br> </td></tr>
+			<tr><td> Enter Short Description:</td></tr> 
+            <tr><td><textarea name='description' rows="3" cols="50" required/></textarea> <br><br> </td></tr>
+			
+            <tr><td>Choose course: </td></tr>
+            
+			
+            <tr><td> {% for cor in course %} 
+    			           <input type="radio" name='course' value="{{cor.id}}" required="required">{{cor}}</input>
+			           {% endfor %} </td></tr>
+             
+            <tr><td style="padding-left:2%;"> <input type="radio" name="mat_type" value="all" required onclick="myotherFunction('none','mat_section')"/>To all the students taking the course <br> </td></tr>
+            <tr><td style="padding-left:2%;"> <input type="radio" name="mat_type" value="my" required onclick="myotherFunction('none','mat_section')"/>To all the students I give the course to <br> </td></tr>
+		   	<tr><td style="padding-left:2%;"> <input type="radio" name="mat_type" value="section" required onclick="myotherFunction('mat_section','none')"/>To all the students in the following section/sections: <br> </td></tr>
+			<tr><td style="padding-left:10%;"> {% for section in sections%}
+					       <input name="mat_section" type="checkbox" value="{{section}}"  onchange="myFunction('mat_section')" required="required" disabled="True"/>{{section}}
+				       {%endfor%} </td></tr>
+			<tr><td> <input type='submit' value='Upload Material' /> </td></tr>
+			</form>
+         </table>    
+		</td>
+	</tr>
 </table>
-</form>
-</br>
-</br>
-{{status}}
-</br>
-</br>
-
-<b>Upload course material:</b>
-</br>
-<form enctype='multipart/form-data' action="{%url 'backend'%}" method="post">
-{% csrf_token %}
-<input type='hidden' name='request_type' value='material' />
-Enter Name: <input type='text' name='name' /></br>
-Choose File: <input type='file' name='file_data' /> </br>
-Enter Short Description: <input type='text' name='description' /> </br>
-Upload to folder: {% for folder in folders %} <input type='checkbox' name='folder' value='{{folder.id}}'>{{folder}}</input> {% endfor %}
-</br>
-
-<input type='submit' value='Upload Material' />
-</form>
-
-</body>
-</html>
+{% endblock %}

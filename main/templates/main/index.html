@@ -1,19 +1,26 @@
-<html>
-<head>
-<title>
-    AAU Push
-</title>
-</head>
-<body bgcolor='#f9f8f0'>
-    <center><h1>AAU Push</h1></center>
-    <center><h2>click on your section below</h2></center>
-<hr>
-    <center>
-        <ul style="list-style-type: none;">
-            {% for section in sections %}
-                <li><a href="{% url 'section' section.code %}">{{section.name}}</a></li>
-            {% endfor %}
-        </ul>
-    </center>
-</body>
-</html>
+{% extends "main/base.html" %}
+
+{% block title %}
+	AAU Push
+{% endblock %}
+
+
+{% block content %}
+<br><br>
+<center>
+		<p>Choose your section</p>
+		<table class="section">
+			<tr class="section">
+     			{% for section in sections %}
+				{% ifchanged section.year %}
+          				</tr><tr class="section">
+          				<th class="section">Year {{section.year}}</th>
+        			{% endifchanged %}
+       				<td class="section">
+       					<a href="{% url 'Section' section.code%}">Section {{section.section_number}}</a>
+       				</td>
+	 		{%endfor%}	
+     			</tr>
+		</table>
+</center>
+{% endblock %}

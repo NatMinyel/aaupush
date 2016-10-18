@@ -1,6 +1,8 @@
 from django.contrib import admin
+from .models import *
 
-from .models import Section, Lecturer, Material, Announcement, Folder
-models = [Section, Lecturer, Material, Announcement, Folder]
+# Register your models here.
+models = [Section, Lecturer, Material, Announcement, Course, Department, StudyField, Quote]
+
 for model in models:
-    admin.site.register(model)
+	admin.site.register(model)

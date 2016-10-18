@@ -1,0 +1,45 @@
+<html>
+<head>
+
+<title>AAU Push:First login page</title>
+
+<style>
+h1 { text-align:center ; 
+	 color: #333; 
+ 	 font-family: Georgia, 'Times New Roman', Times, serif;
+  	 font-size: 2rem;}
+a {
+	 text-decoration: none;
+	 color: #4480b7;}	 
+</style>
+</head>
+<body bgcolor='#fffffa'>
+<header>
+ <center> 
+			
+ <a href="{% url 'Home' %}"><h1>AAU PUSH</h1></a>
+ <h2>First login page</h2>
+ <hr/>
+ </center>
+ 
+ </header>
+ 
+<h5><h3>HI,</h3>This is the first login page,you have been redirected to this page because this is your first login with the user account <b>{{user.first_name}} {{ user.last_name}}</b>.Please fill out the form below and submit it to go to your account.</h5>
+ <center><h5><b>IF YOU CAN'T FIND WHAT YOU ARE LOOKING FOR IN THE CHOICES WE PROVIDED, PLEASE CONTACT US AT  </b></h5></center>
+<font color="#FF0000"><center><h5>You can choose multiple choices by holding down the CTRL key while choosing.</h5></center></font>
+ <table style="border: dashed" border="2px"  width="100%">
+ <tr>
+  <td>  
+<form action="{% url 'first_login' %}" method="post">
+{%csrf_token%}
+{{form.as_p}}
+<label for="password" >Please enter your new password:</label>
+<input id="password" type="text" name="new_password" required/>
+<br><br>
+<input type="submit" value="Submit" />
+</form>
+  </td>
+  </tr>
+</table>
+</body>
+</html>

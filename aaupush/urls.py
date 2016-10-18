@@ -10,21 +10,20 @@ Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
 Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+    1. Add an import:  from blog import urls as blog_urls
+    2. Import the include() function: from django.conf.urls import url, include
+    3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url
+from django.conf.urls import url , include
 from django.contrib import admin
 from main import views
-
 urlpatterns = [
-    url(r'^$', views.index_view, name='index'),
-    url(r'^section/(?P<section_code>[0-9a-zA-Z]+)/$', views.section_view, name='section'),
-    url(r'^materials/(?P<section_code>[0-9a-zA-Z]+)/(?P<folder_link_name>[0-9a-zA-Z-]+)/$', views.folder_view, name = 'folder'),
-    url(r'^file/(?P<material_id>[0-9]+)/$', views.file_view, name='file'),
-    url(r'^login/$', views.login_view, name='login'),
-    url(r'^logout/$', views.logout_view, name='logout'),
-    url(r'^portal/$', views.portal_view, name='portal'),
-    url(r'^backend/$', views.backend_view, name='backend'),
+    url(r'^$' ,views.index, name='Home'),
+    url(r'^section/', include('main.urls')),
+    url(r'^file/(?P<material_id>[0-9a-zA-Z]+)/$',views.file_view, name='File'),
+    url(r'^login/$',views.login_view, name='login'),
+    url(r'^backend/$',views.backend_view, name='backend_view'),
+    url(r'^portal/$',views.portal, name='portal'),
+    url(r'^first_login/$',views.first_login, name='first_login'),
     url(r'^admin/', admin.site.urls),
 ]
