@@ -12,7 +12,9 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
 
 {% block content %}
 	<br>
-	<center><a href="{% url 'Section' section.code%}">Back to Announcements</a></center>
+	<a class="ann" href="{% url 'Section' section.code%}">&ensp;Back to Announcements</a>
+	<a id="switch" href="{% url 'course_view_multi' section.code course.get_link_name %}">Multiple Download Mode&ensp;</a> 
+	<br>
 	<br>
 	{% if materials %}
 	<table width=100% border="1" cellpadding="">
