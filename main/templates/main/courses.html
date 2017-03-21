@@ -21,7 +21,6 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
    	<thead>
    		<tr>
      			<th width="50%">Upload Folders</th>
-     			<th width="50%">Latest Uploads</th>
    		</tr> 
    	</thead>
    	       				
@@ -35,15 +34,6 @@ Year {{section.year}} | Section {{section.section_number}} | Code: {{section.cod
         	  			</li>
         	  		</ul>
         	  	</td>
-        	  	
-        	  	<td>
-        	   		<ul>
-        	   			<li>
-        	   				<a id="file" href="{% url 'File' material.id %}">{% if material.ext%}[{{material.ext | upper}}]{%endif%} {{material.name | capfirst}}
-        	   				</a>
-        	   			</li>
-        	   		</ul>
-        	   	</td>
         	   </tr>	
         	{%endfor%}	
       		
