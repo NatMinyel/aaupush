@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^backend/$',views.backend_view, name='backend_view'),
     url(r'^portal/$',views.portal, name='portal'),
     url(r'^first_login/$',views.first_login, name='first_login'),
+    url(r'^Push_Page/', include('push_page.urls')),
     url(r'^admin/', admin.site.urls),
 ]
